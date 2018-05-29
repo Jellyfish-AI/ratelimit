@@ -1,4 +1,5 @@
 from functools import wraps
+import logging
 from math import floor
 
 import time
@@ -6,6 +7,8 @@ import sys
 import threading
 
 from ratelimit.exception import RateLimitException
+
+logger = logging.getLogger(__name__)
 
 # Use monotonic time if available, otherwise fall back to the system clock.
 now = time.monotonic if hasattr(time, 'monotonic') else time.time
@@ -111,6 +114,8 @@ def sleep_and_retry(func):
         try:
             return func(*args, **kargs)
         except RateLimitException as exception:
-            time.sleep(exception.period_remaining)
+            sleep_period = exception.period_remaining
+            logger.info('RateLimitException; sleeping for %.1f secs (%.1f mins)', sleep_period, sleep_period / 60.)
+            time.sleep(sleep_period)
             return func(*args, **kargs)
     return wrapper
