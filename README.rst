@@ -1,6 +1,3 @@
-Defunct
--------
-
 This is Jellyfish's defunct fork of https://github.com/tomasbasham/ratelimit.  It's been superseded by `jf_github/ratelimit.py`
 
 =================
